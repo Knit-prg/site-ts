@@ -89,7 +89,7 @@ class _Knit_ {
 	 * @param name 名前
 	 * @param lang 言語
 	 */
-	public static showFooter(firstYear: number, year: number, month: number, date: number, name: string, lang: string) {
+	public static showFooter(firstYear: number, year: number, month: number, date: number, name: string, lang: string): void {
 		let link: String, msg: String, updatedTime: String;
 		switch (lang) {
 			case "ja":
@@ -117,5 +117,14 @@ class _Knit_ {
 		</footer>
 		`;
 		document.getElementById("_knit_footer")?.insertAdjacentHTML("beforeend", html);
+	}
+
+	public static showPath(paths: [string, string][]): void {
+		let str = "";
+		for (let i = 0; i < paths.length; i++) {
+			if (i != 0) { str += " > "; }
+			str += `<a href="${paths[i][0]}">${paths[i][1]}</a>`;
+		}
+		document.getElementById("_knit_path")?.insertAdjacentHTML("beforeend", str);
 	}
 }

@@ -2,7 +2,7 @@
  * 共通処理を纏めるやつ
  * 
  * @author Knit prg.
- * @since 0.1.0
+ * @since 2.0.0
  */
 class _Knit_ {
 
@@ -11,6 +11,7 @@ class _Knit_ {
 	 * 
 	 * @param lang 言語
 	 * @returns 日付に応じたメッセージ
+	 * @since 2.0.0
 	 */
 	public static getHeaderMsg(lang: String): String {
 		let today = new Date();
@@ -62,12 +63,44 @@ class _Knit_ {
 	}
 
 	/**
+	 * ランダムな整数を返します
+	 * 
+	 * @param min 最小値
+	 * @param max 最大値
+	 * @returns ランダムな値
+	 * @since 2.0.0
+	 */
+	public static getRandomInteger(min: number, max: number): number {
+		return Math.floor(_Knit_.getRandomNumber(min, max));
+	}
+
+	/**
+	 * ランダムな数字を返します
+	 * 
+	 * @param min 最小値
+	 * @param max 最大値
+	 * @returns ランダムな値
+	 * @since 2.0.0
+	 */
+	public static getRandomNumber(min: number, max: number): number {
+		return Math.random() * ((max - 1) - min) + min;
+	}
+
+	public static isSameArray(arrayA: Array<any>, arrayB: Array<any>): boolean {
+		for (let i = 0; i < arrayA.length; i++) {
+			if (arrayA[i] !== arrayB[i]) { return false; }
+		}
+		return true;
+	}
+
+	/**
 	 * ヘッダーを"\_knit_header"内に表示する
 	 * 
 	 * @param prefixA Knitの前
 	 * @param prefixB Knitの後
 	 * @param name Knitの後の後
 	 * @param lang 言語
+	 * @since 2.0.0
 	 */
 	public static showHeader(prefixA: string, prefixB: string, name: string, lang: string): void {
 		const html = `
@@ -88,6 +121,7 @@ class _Knit_ {
 	 * @param date 日
 	 * @param name 名前
 	 * @param lang 言語
+	 * @since 2.0.0
 	 */
 	public static showFooter(firstYear: number, year: number, month: number, date: number, name: string, lang: string): void {
 		let link: String, msg: String, updatedTime: String;
@@ -119,6 +153,12 @@ class _Knit_ {
 		document.getElementById("_knit_footer")?.insertAdjacentHTML("beforeend", html);
 	}
 
+	/**
+	 * パンくずリストを表示します
+	 * 
+	 * @param paths 表示するやつ
+	 * @since 2.0.0
+	 */
 	public static showPath(paths: [string, string][]): void {
 		let str = "";
 		for (let i = 0; i < paths.length; i++) {

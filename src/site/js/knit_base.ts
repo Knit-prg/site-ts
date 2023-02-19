@@ -7,18 +7,65 @@
 class _Knit_ {
 
 	/**
+	 * 要望ページを展開
+	 * 
+	 * @param name 分野名
+	 * @since 2.0.0
+	 */
+	public static developing(name: string): void {
+		addEventListener("load", function () {
+			let request = new XMLHttpRequest();
+			request.open("GET", "https://sheets.googleapis.com/v4/spreadsheets/1RhIN7Pb6keFBT9QKm9bjGCrLcXPregUfuIL84izO6pU/values/site_report_ja!A2:H?key=AIzaSyCso6tb_OZt75eQ7GrxnLJgMN_EOKdqnbA");
+			request.onload = function () {
+				const data = JSON.parse(request.response).values;
+				let text = "";
+				let index = "";
+				for (let i = 0; i < data.length; i++) {
+					if (data[i][6] == name) {
+						if (data[i][3] == "") { data[i][3] = "特になし"; }
+						if (data[i][5] == "") { data[i][5] = "未回答"; }
+						text += `
+						<h2><a name="${i + 1}">${i + 1}. ${data[i][4]}</a></h2>
+						<div class="small">ジャンル:${data[i][2]}</div>
+						<div class="small">投稿日時:${data[i][0]}</div>
+						<div class="small">発生URL:${data[i][3]}</div>
+						<div class="bold">回答:${data[i][5]}</div>
+						`;
+						index += `<li><a href="#${i + 1}">${i + 1}. ${data[i][4]}</a></li>`;
+					}
+				}
+				if (text == "") {
+					text = "なし";
+				}
+				if (index == "") {
+					index = "なし";
+				}
+				const content = document.getElementById("content");
+				if (content != null) {
+					content.innerHTML = text;
+				}
+				const indexE = document.getElementById("index");
+				if (indexE != null) {
+					indexE.innerHTML = `<div>目次</div>${index}`
+				}
+			}
+			request.send();
+		});
+	}
+
+	/**
 	 * 日付に応じたメッセージを返す
 	 * 
 	 * @param lang 言語
 	 * @returns 日付に応じたメッセージ
 	 * @since 2.0.0
 	 */
-	public static getHeaderMsg(lang: String): String {
+	public static getHeaderMsg(lang: string): string {
 		let today = new Date();
 		let year = today.getFullYear();
 		let month = today.getMonth();
 		let date = today.getDate();
-		let msg: String;
+		let msg: string;
 		switch (lang) {
 			case "ja":
 				if (month == 1 && date <= 5) { msg = "新年明けましておめでとうございます。今年も宜しくお願いします。"; }

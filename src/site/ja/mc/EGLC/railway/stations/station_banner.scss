@@ -1,0 +1,65 @@
+@mixin station_banner_left {
+	text-align: left;
+	padding-left: 1em;
+}
+
+@mixin station_banner_right {
+	text-align: right;
+	padding-right: 1em;
+}
+
+#station_banner {
+	outline: 1px solid black;
+	padding: 0 !important;
+
+	#current_name {
+		font-size: 300%;
+		font-weight: bold;
+	}
+
+	div {
+		padding: 0;
+	}
+
+	#line2,
+	#line3,
+	#line4 {
+		display: flex;
+		flex-direction: row;
+
+		* {
+			width: calc(100%/3);
+		}
+	}
+
+	#line2 {
+		#before_id {
+			@include station_banner_left
+		}
+
+		#next_id {
+			@include station_banner_right
+		}
+	}
+
+	#line3 {
+		#before_name {
+			@include station_banner_left
+		}
+
+		#next_name {
+			@include station_banner_right
+		}
+	}
+
+	#line4 {
+		#before_en {
+			@include station_banner_left
+		}
+
+		#next_en {
+			@include station_banner_right
+		}
+	}
+
+}

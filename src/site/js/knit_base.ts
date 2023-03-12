@@ -63,7 +63,7 @@ export class _Knit_ {
 	public static getHeaderMsg(lang: string): string {
 		let today = new Date();
 		let year = today.getFullYear();
-		let month = today.getMonth();
+		let month = today.getMonth() + 1;
 		let date = today.getDate();
 		let msg: string;
 		switch (lang) {
@@ -74,7 +74,7 @@ export class _Knit_ {
 				else if (month == 2 && date == 14) { msg = "//todo:彼女ができたらここに煽りを書く"; }
 				else if (month == 3 && date == 3) { msg = "ひな祭りです。桃食いたい"; }
 				else if (month == 3 && date == 11) { msg = `東日本大震災(2011/3/11)から${year - 2011}年です。避難経路は皆さん決めていますか？` }
-				else if (month == 3 && date == 12) { msg = `栄村大震災(2011/3/12)から${year - 2011}年です。地震対策は皆さんどうされていますか？`; }
+				else if (month == 3 && date == 12) { msg = `長野県北部地震(2011/3/12)から${year - 2011}年です。地震対策は皆さんどうされていますか？`; }
 				else if (month == 3 && date == 14) { msg = "//todo:彼女ができたらここに煽り文を書く" }
 				else if (month == 4 && date <= 7) { msg = "新年度スタート！"; }
 				else if ((month == 4 && date >= 29) || (month == 5 && date <= 5)) { msg = "ゴールデンウィーク！！！"; }
@@ -133,6 +133,49 @@ export class _Knit_ {
 		return Math.random() * ((max - 1) - min) + min;
 	}
 
+	/**
+	 * なんかそれっぽい文字列を出力します。
+	 * 
+	 * @param src 元文字列
+	 * @returns それっぽい文字列
+	 * @since 2.0.0
+	 */
+	public static getGlitchedText(src: string): string {
+		let result = "";
+		for (let i = 0; i < src.length; i++) {
+			let random = _Knit_.getRandomInteger(0, 1);
+			switch (random) {
+				case 0:
+					result = result + String.fromCodePoint((src.codePointAt(i) ?? 64) - _Knit_.getRandomInteger(0, 20));
+					break;
+				case 1:
+					result = result + String.fromCodePoint((src.codePointAt(i) ?? 63) + _Knit_.getRandomInteger(0, 64));
+					break;
+				default:
+					result = result + "?";
+			}
+		}
+		return result;
+	}
+
+	public static getPageOption(key: string): string {
+		let searches = location.search.substring(1).split("&");
+		for (let i = 0; i < searches.length; i++) {
+			if (searches[i].split("=")[0] == key) {
+				return searches[i].split("=")[1];
+			}
+		}
+		return "";
+	}
+
+	/**
+	 * 配列の内容が同じか検証します。
+	 * 
+	 * @param arrayA 配列その一
+	 * @param arrayB 配列その二
+	 * @returns 同じか
+	 * @since 2.0.0
+	 */
 	public static isSameArray(arrayA: Array<any>, arrayB: Array<any>): boolean {
 		for (let i = 0; i < arrayA.length; i++) {
 			if (arrayA[i] !== arrayB[i]) { return false; }

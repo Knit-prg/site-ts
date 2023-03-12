@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-204669901-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-204669901-1');
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="author" content="Knit prg.">
+	<meta name="description" content="Knit prg.">
+	<meta name="keywords" content="KNit prg.">
+	<meta name="twitter:site" content="@knit_prg">
+	<link rel="stylesheet" type="text/css" href="/site/css/knit_base.css">
+	<link rel="stylesheet" type="text/css" href="/site/ja/mc/knit_mapper/knit_mapper.css">
+	<link rel="icon" type="image/png" href="/site/img/icon/prg.png">
+	<title>XelticaMC/新メインワールド - Knit Mapper ver.Beta</title>
+</head>
+
+<body>
+	<noscript>Please enable JavaScript... please...</noscript>
+	<div id="whole">
+		<div id="menu">
+			<div>Knit Mapper ver.Beta</div>
+			<div>ワールド名:<a href="/site/ja/mc/#xelticamc">XelticaMC</a>新メインワールド by XelticaMC</div>
+			<div class="red">ワールドはKnitの作成物ではありません。</div>
+			<div class="red">スマホ、タブレットで移動が正常にできないことがあります。その場合は、下のボタンで操作して下さい。</div>
+			<table id="button_mover">
+                    <tr>
+                        <td><button id="button_mover_NW">↖</button></td>
+                        <td><button id="button_mover_N">↑</button></td>
+                        <td><button id="button_mover_NE">↗</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="button_mover_W">←</button></td>
+                        <td></td>
+                        <td><button id="button_mover_E">→</button></td>
+                    </tr>
+                    <tr>
+                        <td><button id="button_mover_SW">↙</button></td>
+                        <td><button id="button_mover_S">↓</button></td>
+                        <td><button id="button_mover_SE">↘</button></td>
+                    </tr>
+            </table>
+			<div>中心座標:<span id="center_x">-</span>,<span id="center_z">-</span></div>
+			<div>マウス/タッチ座標:<span id="mouse_center_x">-</span>,<span id="mouse_center_z"></span></div>
+			<div>表示範囲</div>
+			<table border>
+                <tr><td id="table_nw">-,-</td><td id="table_ne">-,-</td></tr>
+                <tr><td id="table_sw">-,-</td><td id="table_se">-,-</td></tr>
+            </table>
+			<div class="red">スマホ、タブレットでのピンチイン・ピンチアウトによるズームイン・ズームアウトは未実装です。下のボタンで操作して下さい</div>
+			<div id="button_zoomer">ズームレベル:<input id="zoom_level" type="number" min="0.1" step="0.1"><button id="zoom_plus">+</button><button id="zoom_minus">-</button></div>
+			<fieldset id="layers_selector">
+				<label><input type="checkbox" name="cities">自治体</label>
+				<label><input type="checkbox" name="railway">鉄道</label>
+				<label><input type="checkbox" name="buildings">建物</label>
+				<label><input type="checkbox" name="road">道</label>
+			</fieldset>
+			<div>描画中の要素数:<span id="element_number"></span></div>
+			<div>↓自動計算の為誤差が出ることがあります。</div>
+			<div id="menu_inner"></div>
+		</div>
+		<div id="map">
+			<svg id="map_svg"></svg>
+		</div>
+	</div>
+	<div id="menu_button">メニューを畳む</div>
+	<div id="credit">最終測量日:2022年2月6日</div>
+	<script type="module">
+		import { _Knit_ } from "/site/js/knit_base.js";
+		import { KnitMapper } from "/site/ja/mc/knit_mapper/knit_mapper.js";
+		import { KnitMapperData, KnitMapperCitiesLayer } from "/site/ja/mc/knit_mapper/knit_mapper_data.js";
+		import { cities } from "./data.js";
+		const citiesLayer = new KnitMapperCitiesLayer();
+		citiesLayer.addAll(cities);
+		KnitMapperData.registerLayer("cities", citiesLayer);
+		KnitMapper.init();
+	</script>
+</body>
+
+</html>

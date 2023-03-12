@@ -4,7 +4,7 @@
  * @author Knit prg.
  * @since 2.0.0
  */
-class _Knit_ {
+export class _Knit_ {
 
 	/**
 	 * 要望ページを展開

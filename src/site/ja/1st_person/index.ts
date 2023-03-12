@@ -1,3 +1,5 @@
+import { _Knit_ } from "/site/js/knit_base.js";
+
 /**
  * 一人称データを表す
  * 
@@ -25,7 +27,7 @@ class FirstPerson {
  * @author Knit prg.
  * @since 2.0.0
  */
-class FirstPersonRoulette {
+export class FirstPersonRoulette {
 
 	/**
 	 * 一人称一覧

@@ -14,7 +14,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta name="author" content="Knit prg.">
 	<meta name="description" content="Knit prg.">
-	<meta name="keywords" content="KNit prg.">
+	<meta name="keywords" content="Knit prg.">
 	<meta name="twitter:site" content="@knit_prg">
 	<link rel="stylesheet" type="text/css" href="/site/css/knit_base.css">
 	<link rel="stylesheet" type="text/css" href="/site/ja/mc/knit_mapper/knit_mapper.css">
@@ -56,12 +56,7 @@
             </table>
 			<div class="red">スマホ、タブレットでのピンチイン・ピンチアウトによるズームイン・ズームアウトは未実装です。下のボタンで操作して下さい</div>
 			<div id="button_zoomer">ズームレベル:<input id="zoom_level" type="number" min="0.1" step="0.1"><button id="zoom_plus">+</button><button id="zoom_minus">-</button></div>
-			<fieldset id="layers_selector">
-				<label><input type="checkbox" name="cities">自治体</label>
-				<label><input type="checkbox" name="railway">鉄道</label>
-				<label><input type="checkbox" name="buildings">建物</label>
-				<label><input type="checkbox" name="road">道</label>
-			</fieldset>
+			<fieldset id="layers_selector"></fieldset>
 			<div>描画中の要素数:<span id="element_number"></span></div>
 			<div>↓自動計算の為誤差が出ることがあります。</div>
 			<div id="menu_inner"></div>
@@ -75,11 +70,14 @@
 	<script type="module">
 		import { _Knit_ } from "/site/js/knit_base.js";
 		import { KnitMapper } from "/site/ja/mc/knit_mapper/knit_mapper.js";
-		import { KnitMapperData, KnitMapperCitiesLayer } from "/site/ja/mc/knit_mapper/knit_mapper_data.js";
-		import { cities } from "./data.js";
+		import { KnitMapperData, KnitMapperCitiesLayer, KnitMapperRoadsLayer } from "/site/ja/mc/knit_mapper/knit_mapper_data.js";
+		import { cities, roads } from "./data.js";
 		const citiesLayer = new KnitMapperCitiesLayer();
 		citiesLayer.addAll(cities);
 		KnitMapperData.registerLayer("cities", citiesLayer);
+		const roadsLayer = new KnitMapperRoadsLayer();
+		roadsLayer.addAll(roads);
+		KnitMapperData.registerLayer("roads", roadsLayer);
 		KnitMapper.init();
 	</script>
 </body>

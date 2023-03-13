@@ -1,11 +1,22 @@
 import { KnitMapper } from "./knit_mapper.js";
 abstract class KnitMapperLayer {
+	public abstract add(value: any): void
+	public abstract addAll(value: any[]): void
 	public abstract draw(mapper: KnitMapper): Map<number, string>
 	public abstract getData(data: DOMStringMap): string
+	public abstract getName(): string
 }
 
 export class KnitMapperData {
 	private static layers: Map<string, KnitMapperLayer> = new Map();
+	public static getAllLayersName(): string[] {
+		let all: string[] = [];
+		let keys = this.layers.keys()
+		for (let i = 0; i < this.layers.size; i++) {
+			all.push(keys.next().value);
+		}
+		return all;
+	}
 	public static getLayer(layerName: string | undefined): KnitMapperLayer | null {
 		if (layerName == undefined) { return null; }
 		return this.layers.get(layerName) ?? null;
@@ -15,7 +26,7 @@ export class KnitMapperData {
 	}
 }
 
-class KnitMapperCities {
+class KnitMapperCity {
 	name: string = "";
 	kana: string = "";
 	type: "path" | "circle" = "path";
@@ -33,9 +44,9 @@ class KnitMapperCities {
 }
 
 export class KnitMapperCitiesLayer extends KnitMapperLayer {
-	private data: KnitMapperCities[] = [];
+	private data: KnitMapperCity[] = [];
 	public add(value: any): void {
-		const casted = new KnitMapperCities();
+		const casted = new KnitMapperCity();
 		const name = value.name;
 		if (typeof name == "string") { casted.name = name; }
 		const kana = value.kana ?? value.pronunciation;
@@ -75,7 +86,7 @@ export class KnitMapperCitiesLayer extends KnitMapperLayer {
 	}
 	public addAll(value: any[]): void {
 		for (let i = 0; i < value.length; i++) {
-			this.add(value[i])
+			this.add(value[i]);
 		}
 	}
 	public override draw(): Map<number, string> {
@@ -147,7 +158,7 @@ export class KnitMapperCitiesLayer extends KnitMapperLayer {
 		return `
 		<table border>
 			<tr><td>名称</td><td>${data["name"]}</td></tr>
-			<tr><td>読み</td><td>${data["pronunciation"]}</td></tr>
+			<tr><td>読み</td><td>${data["kana"]}</td></tr>
 			<tr><td>立入</td><td>${entryable}</td></tr>
 			<tr><td>建築</td><td>${constructable}</td></tr>
 			<tr><td>東西幅</td><td>${data["width"]}</td></tr>
@@ -158,4 +169,89 @@ export class KnitMapperCitiesLayer extends KnitMapperLayer {
 		</table>
 		`
 	}
+	public override getName(): string {
+		return "自治体";
+	}
+}
+
+class KnitMapperRoad {
+	name: string | null = null;
+	width: number = 3;
+	path: [number, number][] = [];
+	layer: number = 0;
+	pathText: string = "[]";
+}
+
+export class KnitMapperRoadsLayer extends KnitMapperLayer {
+	private data: KnitMapperRoad[] = [];
+	public add(value: any): void {
+		const casted = new KnitMapperRoad();
+		const name = value.name;
+		if (typeof name == "string") { casted.name = name; }
+		const width = value.width;
+		if (typeof width == "number") { casted.width = width; }
+		const path = value.path;
+		if (Array.isArray(path)) {
+			for (let i = 0; i < path.length; i++) {
+				const pathI = path[i];
+				if (!Array.isArray(pathI)) { continue; }
+				if (pathI.length != 2) { continue; }
+				if (typeof pathI[0] != "number") { continue; }
+				if (typeof pathI[1] != "number") { continue; }
+				casted.path.push([pathI[0], pathI[1]]);
+			}
+		}
+		const layer = value.layer;
+		if (typeof layer == "number") { casted.layer = layer; }
+		casted.pathText = "[" + casted.path.join("],[") + "]";
+		this.data.push(casted);
+	}
+	public addAll(value: any[]): void {
+		for (let i = 0; i < value.length; i++) {
+			this.add(value[i]);
+		}
+	}
+	public override draw(): Map<number, string> {
+		let result: Map<number, string> = new Map();
+		for (let i = 0; i < this.data.length; i++) {
+			if (KnitMapper.util.isPathVisible(this.data[i].path)) {
+				let path = "";
+				for (let j = 0; j < this.data[i].path.length; j++) {
+					if (j == 0) { path += "M "; }
+					else { path += "L "; }
+					path += `${KnitMapper.util.getRelativePositionX(this.data[i].path[j][0]).toFixed(0)} ${KnitMapper.util.getRelativePositionZ(this.data[i].path[j][1]).toFixed(0)}`;
+				}
+				let strokeWidth = this.data[i].width * KnitMapper.parameter.getZoomLevel();
+				if (KnitMapper.parameter.getZoomLevel() <= 1) { strokeWidth = this.data[i].width; }
+				result.set(this.data[i].layer, (result.get(this.data[i].layer) ?? "") + `<path
+					d="${path}"
+					stroke="yellow"
+					stroke-width="${strokeWidth}px"
+					fill="none"
+					class="roads"
+					data-layer="road"
+					data-name="${this.data[i].name}
+					data-path="${this.data[i].pathText}
+				></path>`);
+			}
+		}
+		return result;
+	}
+	public override getData(data: DOMStringMap): string {
+		return data["name"] == null ? "無名道路" : data["name"];
+	}
+	public override getName(): string {
+		return "道路";
+	}
+}
+
+class KnitMapperBuilding {
+	name: string = "";
+	use: "farm" | "gov_office" | "house" | "others" | "park" | "station" = "others"
+	floor: number | string = 0;
+	type: "path" | "rect" = "path";
+	textAppearance: [number, number] = [2, Infinity];
+	textVertical: boolean = false;
+	layer: number = 0;
+	path: [number, number][] = [];
 }

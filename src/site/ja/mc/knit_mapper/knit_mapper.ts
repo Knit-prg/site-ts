@@ -100,8 +100,8 @@ class KnitMapperMove {
 		KnitMapper.parameter.setX(newX, false);
 		KnitMapper.parameter.setZ(newZ, false);
 		KnitMapper.mapbox.update();
-		document.getElementById("mouse_center_x")!.innerText = KnitMapper.parameter.getX().toString();
-		document.getElementById("mouse_center_z")!.innerText = KnitMapper.parameter.getZ().toString();
+		document.getElementById("center_x")!.innerText = KnitMapper.parameter.getX().toFixed(2);
+		document.getElementById("center_z")!.innerText = KnitMapper.parameter.getZ().toFixed(2);
 		KnitMapper.draw();
 	}
 }
@@ -134,8 +134,8 @@ class KnitMapperParameter {
 			KnitMapper.menu.hide();
 		}
 		KnitMapper.move.set(KnitMapper.parameter.x, KnitMapper.parameter.z);
-		document.getElementById("center_x")!.innerText = KnitMapper.parameter.x.toString();
-		document.getElementById("center_z")!.innerText = KnitMapper.parameter.z.toString();
+		document.getElementById("center_x")!.innerText = KnitMapper.parameter.x.toFixed(2);
+		document.getElementById("center_z")!.innerText = KnitMapper.parameter.z.toFixed(2);
 		KnitMapper.zoom.set(KnitMapper.parameter.zoomLevel);
 		(document.getElementById("zoom_level") as HTMLInputElement)!.value = KnitMapper.parameter.zoomLevel.toString();
 		KnitMapper.layers.set(KnitMapper.parameter.layers);
@@ -332,7 +332,7 @@ export class KnitMapper {
 			}
 			let keys = drown.keys();
 			for (let key of keys) {
-				final.set(key, final.get(key) ?? "" + drown.get(key) ?? "");
+				final.set(key, (final.get(key) ?? "") + (drown.get(key) ?? ""));
 			}
 		}
 		let finalKeys = final.keys();
@@ -345,8 +345,12 @@ export class KnitMapper {
 	}
 	public static init(): void {
 		if (location.search == "") {
-			location.search = "?x=0&z=0&is_menu_shown=true&zoom_level=1&layers=cities,railway,buildings,road";
+			location.search = "?x=0&z=0&is_menu_shown=true&zoom_level=1&layers=" + KnitMapperData.getAllLayersName().join(",");
 		}
+		KnitMapperData.getAllLayersName().forEach(layerName => {
+			const layer = KnitMapperData.getLayer(layerName);
+			document.getElementById("layers_selector")!.insertAdjacentHTML("beforeend", `<label><input type="checkbox" name="${layerName}">${layer?.getName()}</label>`);
+		});
 		let search = location.search.slice(1).split("&");
 		for (let i = 0; i < search.length; i++) {
 			switch (search[i].split("=")[0]) {

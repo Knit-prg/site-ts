@@ -45,7 +45,7 @@ class KnitMapperCity {
 
 export class KnitMapperCitiesLayer extends KnitMapperLayer {
 	private data: KnitMapperCity[] = [];
-	public add(value: any): void {
+	public override add(value: any): void {
 		const casted = new KnitMapperCity();
 		const name = value.name;
 		if (typeof name == "string") { casted.name = name; }
@@ -84,7 +84,7 @@ export class KnitMapperCitiesLayer extends KnitMapperLayer {
 		casted.pathText = "[" + casted.path.join("],[") + "]";
 		this.data.push(casted);
 	}
-	public addAll(value: any[]): void {
+	public override addAll(value: any[]): void {
 		for (let i = 0; i < value.length; i++) {
 			this.add(value[i]);
 		}
@@ -175,7 +175,7 @@ export class KnitMapperCitiesLayer extends KnitMapperLayer {
 }
 
 class KnitMapperRoad {
-	name: string | null = null;
+	name: string = "無名道路";
 	width: number = 3;
 	path: [number, number][] = [];
 	layer: number = 0;
@@ -184,7 +184,7 @@ class KnitMapperRoad {
 
 export class KnitMapperRoadsLayer extends KnitMapperLayer {
 	private data: KnitMapperRoad[] = [];
-	public add(value: any): void {
+	public override add(value: any): void {
 		const casted = new KnitMapperRoad();
 		const name = value.name;
 		if (typeof name == "string") { casted.name = name; }
@@ -206,7 +206,7 @@ export class KnitMapperRoadsLayer extends KnitMapperLayer {
 		casted.pathText = "[" + casted.path.join("],[") + "]";
 		this.data.push(casted);
 	}
-	public addAll(value: any[]): void {
+	public override addAll(value: any[]): void {
 		for (let i = 0; i < value.length; i++) {
 			this.add(value[i]);
 		}
@@ -229,16 +229,23 @@ export class KnitMapperRoadsLayer extends KnitMapperLayer {
 					stroke-width="${strokeWidth}px"
 					fill="none"
 					class="roads"
-					data-layer="road"
-					data-name="${this.data[i].name}
-					data-path="${this.data[i].pathText}
+					data-layer="roads"
+					data-name="${this.data[i].name}"
+					data-width="${this.data[i].width}"
+					data-path="${this.data[i].pathText}"
 				></path>`);
 			}
 		}
 		return result;
 	}
 	public override getData(data: DOMStringMap): string {
-		return data["name"] == null ? "無名道路" : data["name"];
+		return `
+		<table border>
+			<tr><td>名称</td><td>${data["name"]}</td></tr>
+			<tr><td>幅</td><td>${data["width"]}</td></tr>
+			<tr><td>経路</td><td>${data["path"]}</td></tr>
+		</table>
+		`;
 	}
 	public override getName(): string {
 		return "道路";
@@ -247,11 +254,235 @@ export class KnitMapperRoadsLayer extends KnitMapperLayer {
 
 class KnitMapperBuilding {
 	name: string = "";
-	use: "farm" | "gov_office" | "house" | "others" | "park" | "station" = "others"
+	use: "farm" | "gov_office" | "house" | "others" | "park" | "station" | "square" = "others"
 	floor: number | string = 0;
 	type: "path" | "rect" = "path";
 	textAppearance: [number, number] = [2, Infinity];
 	textVertical: boolean = false;
 	layer: number = 0;
 	path: [number, number][] = [];
+	width: number = 0;
+	height: number = 0;
+	area: number = 0;
+	center: [number, number] = [0, 0];
+	pathText: string = "[]";
+	address: string = "";
+}
+
+export class KnitMapperBuildingsLayer extends KnitMapperLayer {
+	private data: KnitMapperBuilding[] = [];
+	private readonly USES: Map<string, [string, string]> = new Map([
+		["farm", ["green", "農地/牧地"]],
+		["gov_office", ["cadetblue", "官公庁"]],
+		["house", ["crimson", "住居"]],
+		["others", ["white", "その他"]],
+		["park", ["chartreuse", "公園"]],
+		["station", ["teal", "駅"]],
+		["square", ["olive", "広場"]],
+	]);
+	public override add(value: any): void {
+		const casted = new KnitMapperBuilding();
+		const name = value.name;
+		if (typeof name == "string") { casted.name = name; }
+		const use = value.use;
+		if (typeof use == "string" && (
+			use == "farm" ||
+			use == "gov_office" ||
+			use == "house" ||
+			use == "others" ||
+			use == "park" ||
+			use == "station" ||
+			use == "square"
+		)) { casted.use = use; }
+		const floor = value.floor;
+		if (typeof floor == "number" || typeof floor == "string") { casted.floor = floor; }
+		const type = value.type;
+		if (typeof type == "string" && (type == "path" || type == "rect")) { casted.type = type; }
+		const textAppearance = value.textAppearance ?? value.text_appearance;
+		if (Array.isArray(textAppearance)) {
+			if (textAppearance.length == 2 && typeof textAppearance[0] == "number" && typeof textAppearance[1] == "number") {
+				casted.textAppearance = [textAppearance[0], textAppearance[1]];
+			}
+		}
+		const textVertical = value.textVertical ?? value.text_vertical;
+		if (typeof textVertical == "boolean") { casted.textVertical = textVertical; }
+		const layer = value.layer;
+		if (typeof layer == "number") { casted.layer = layer; }
+		const path = value.path;
+		if (Array.isArray(path)) {
+			for (let i = 0; i < path.length; i++) {
+				const pathI = path[i];
+				if (!Array.isArray(pathI)) { continue; }
+				if (pathI.length != 2) { continue; }
+				if (typeof pathI[0] != "number") { continue; }
+				if (typeof pathI[1] != "number") { continue; }
+				casted.path.push([pathI[0], pathI[1]]);
+			}
+		}
+		if (path.length < 2) { return; }
+		switch (casted.type) {
+			case "rect": {
+				casted.width = casted.path[1][0] - casted.path[0][0];
+				casted.height = casted.path[1][1] - casted.path[0][1];
+				casted.area = casted.width * casted.height;
+				casted.center = [casted.path[0][0] + casted.width / 2, casted.path[0][1] + casted.height / 2];
+				break;
+			}
+			case "path": {
+				casted.center = [KnitMapper.util.calcCenterX(casted.path), KnitMapper.util.calcCenterZ(casted.path)];
+				casted.width = KnitMapper.util.getPathRight(casted.path) - KnitMapper.util.getPathLeft(casted.path);
+				casted.height = KnitMapper.util.getPathBottom(casted.path) - KnitMapper.util.getPathTop(casted.path);
+				casted.area = KnitMapper.util.calcPathArea(casted.path);
+			}
+		}
+		casted.pathText = "[" + casted.path.join("],[") + "]";
+		const address = value.address;
+		if (typeof address == "string") { casted.address = address; }
+		this.data.push(casted);
+	}
+	public override addAll(value: any[]): void {
+		for (let i = 0; i < value.length; i++) {
+			this.add(value[i]);
+		}
+	}
+	public override draw(mapper: KnitMapper): Map<number, string> {
+		let result: Map<number, string> = new Map();
+		for (let i = 0; i < this.data.length; i++) {
+			let fill = this.USES.get(this.data[i].use)?.[0] ?? "white";
+			let use = this.USES.get(this.data[i].use)?.[1] ?? "その他";
+			let stroke = "black";
+			if (KnitMapper.parameter.getZoomLevel() < 3) { stroke = "none"; }
+			switch (this.data[i].type) {
+				case "rect": {
+					let mapbox = KnitMapper.mapbox;
+					let left = this.data[i].path[0][0];
+					let right = this.data[i].path[1][0];
+					let top = this.data[i].path[0][1];
+					let bottom = this.data[i].path[1][1];
+					let mapboxLeft = mapbox.nw[0];
+					let mapboxRight = mapbox.ne[0];
+					let mapboxTop = mapbox.nw[1];
+					let mapboxBottom = mapbox.sw[1];
+					let leftVisible = left - mapboxLeft > 0 && left - mapboxRight < 0;
+					let rightVisible = right - mapboxLeft > 0 && right - mapboxRight < 0;
+					let rawWidth = right - left;
+					let screenWidth = mapboxRight - mapboxLeft;
+					let horizontalVisible = (leftVisible || rightVisible) || rawWidth > screenWidth;
+					let topVisible = top - mapboxTop > 0 && top - mapboxBottom < 0;
+					let bottomVisible = bottom - mapboxTop > 0 && bottom - mapboxBottom < 0;
+					let rawHeight = bottom - top;
+					let screenHeight = mapboxBottom - mapboxTop;
+					let verticalVisible = (topVisible || bottomVisible) || rawHeight > screenHeight;
+					let visible = horizontalVisible && verticalVisible;
+					if (visible) {
+						let zoomLevel = KnitMapper.parameter.getZoomLevel();
+						let x = KnitMapper.util.getRelativePositionX(left);
+						let y = KnitMapper.util.getRelativePositionZ(top);
+						let width = this.data[i].width * zoomLevel;
+						let height = this.data[i].height * zoomLevel;
+						result.set(this.data[i].layer, (result.get(this.data[i].layer) ?? "") + `<rect
+							x="${x.toFixed(0)}"
+							y="${y.toFixed(0)}"
+							width="${width.toFixed(0)}"
+							height="${height.toFixed(0)}"
+							fill="${fill}"
+							stroke="${stroke}"
+							stroke-width="2.5px"
+							class="buildings"
+							data-layer="buildings"
+							data-name="${this.data[i].name}"
+							data-use="${use}"
+							data-floor="${this.data[i].floor}"
+							data-width="${this.data[i].width}"
+							data-height="${this.data[i].height}"
+							data-area="${this.data[i].area}"
+							data-center_x="${this.data[i].center[0]}"
+							data-center_z="${this.data[i].center[1]}"
+							data-path="${this.data[i].pathText}"
+							data-address="${this.data[i].address}"
+						></rect>`);
+						if (zoomLevel >= this.data[i].textAppearance[0] && zoomLevel <= this.data[i].textAppearance[1]) {
+							result.set(10000, (result.get(10000) ?? "") + `<text
+								x="${KnitMapper.util.getRelativePositionX(this.data[i].center[0])}"
+								y="${KnitMapper.util.getRelativePositionZ(this.data[i].center[1])}"
+								fill="black"
+								stroke="white"
+								stroke-width="5px"
+								text-anchor="middle"
+								${this.data[i].textVertical ? "writing-mode='tb'" : ""}
+								class="buildings_text"
+							>${this.data[i].name}</text>`);
+						}
+					}
+					break;
+				}
+				case "path": {
+					if (KnitMapper.util.isPathVisible(this.data[i].path)) {
+						let mapbox = KnitMapper.mapbox;
+						let path = "";
+						for (let j = 0; j < this.data[i].path.length; j++) {
+							if (j == 0) { path += "M "; }
+							else { path += "L "; }
+							path += `${KnitMapper.util.getRelativePositionX(this.data[i].path[j][0]).toFixed(0)} ${KnitMapper.util.getRelativePositionZ(this.data[i].path[j][1]).toFixed(0)}`;
+						}
+						path += "Z";
+						result.set(this.data[i].layer, (result.get(this.data[i].layer) ?? "") + `<path
+							d="${path}"
+							fill="${fill}"
+							stroke="${stroke}"
+							stroke-width="2.5px"
+							class="buildings"
+							data-layer="buildings"
+							data-name="${this.data[i].name}"
+							data-use="${use}"
+							data-floor="${this.data[i].floor}"
+							data-width="${this.data[i].width}"
+							data-height="${this.data[i].height}"
+							data-area="${this.data[i].area}"
+							data-center_x="${this.data[i].center[0]}"
+							data-center_z="${this.data[i].center[1]}"
+							data-path="${this.data[i].pathText}"
+						></path>`);
+						if (KnitMapper.parameter.getZoomLevel() >= this.data[i].textAppearance[0] && KnitMapper.parameter.getZoomLevel() <= this.data[i].textAppearance[1]) {
+							result.set(10000, (result.get(10000) ?? "") + `<text
+								x="${KnitMapper.util.getRelativePositionX(this.data[i].center[0]).toFixed(0)}"
+								y="${KnitMapper.util.getRelativePositionZ(this.data[i].center[1]).toFixed(0)}"
+								fill="black"
+								stroke="white"
+								stroke-width="5px"
+								text-anchor="middle"
+								${this.data[i].textVertical ? "writing-mode='tb'" : ""}
+								class="buildings_text
+							>${this.data[i].name}</text>`);
+						}
+					}
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	public override getData(data: DOMStringMap): string {
+		let floor;
+		if (isNaN(Number.parseInt(data["floor"] ?? ""))) {
+			floor = data["floor"];
+		} else {
+			floor = data["floor"] + "階建て";
+		}
+		return `
+			<table border>
+				<tr><td>名称</td><td>${data["name"]}</td></tr>
+				<tr><td>使用用途</td><td>${data["use"]}</td></tr>
+				<tr><td>階数</td><td>${floor}</td></tr>
+				<tr><td>東西幅</td><td>${data["width"]}</td></tr>
+				<tr><td>南北幅</td><td>${data["height"]}</td></tr>
+				<tr><td>面積</td><td>${data["area"]}</td></tr>
+				<tr><td>中心</td><td>${data["center_x"]},${data["center_z"]}</td></tr>
+				<tr><td>外形</td><td><details><summary>クリックで展開/収納</summary>${data["path"]}</details></td><?tr>
+			</table>
+		`;
+	}
+	public override getName(): string {
+		return "建物";
+	}
 }

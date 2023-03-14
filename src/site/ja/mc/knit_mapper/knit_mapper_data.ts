@@ -486,3 +486,71 @@ export class KnitMapperBuildingsLayer extends KnitMapperLayer {
 		return "建物";
 	}
 }
+class KnitMapperRailway {
+	name: string = "";
+	path: [number, number][] = [];
+	pathText: string = "[]";
+}
+
+export class KnitMapperRailwaysLayer extends KnitMapperLayer {
+	private data: KnitMapperRailway[] = [];
+	public override add(value: any): void {
+		const casted = new KnitMapperRailway();
+		const name = value.name;
+		if (typeof name == "string") { casted.name = name; }
+		const path = value.path;
+		if (Array.isArray(path)) {
+			for (let i = 0; i < path.length; i++) {
+				const pathI = path[i];
+				if (!Array.isArray(pathI)) { continue; }
+				if (pathI.length != 2) { continue; }
+				if (typeof pathI[0] != "number") { continue; }
+				if (typeof pathI[1] != "number") { continue; }
+				casted.path.push([pathI[0], pathI[1]]);
+			}
+		}
+		casted.pathText = "[" + casted.path.join("],[") + "]";
+		this.data.push(casted);
+	}
+	public override addAll(value: any[]): void {
+		for (let i = 0; i < value.length; i++) {
+			this.add(value[i]);
+		}
+	}
+	public override draw(mapper: KnitMapper): Map<number, string> {
+		let result: Map<number, string> = new Map();
+		for (let i = 0; i < this.data.length; i++) {
+			if (KnitMapper.util.isPathVisible(this.data[i].path)) {
+				let path = "";
+				for (let j = 0; j < this.data[i].path.length; j++) {
+					if (j == 0) { path += "M "; }
+					else { path += "L "; }
+					path += `${KnitMapper.util.getRelativePositionX(this.data[i].path[j][0])} ${KnitMapper.util.getRelativePositionZ(this.data[i].path[j][1])}`;
+				}
+				result.set(210, (result.get(210) ?? "") + `<path
+					d="${path}"
+					stroke="maroon"
+					stroke-width="${KnitMapper.parameter.getZoomLevel() < 1 ? 2 : KnitMapper.parameter.getZoomLevel()}px"
+					fill="none"
+					id="railway_path_${i}"
+					class="railway"
+					data-layer="railway"
+					data-name="${this.data[i].name}"
+					data-path="${this.data[i].pathText}"
+				></path>`);
+			}
+		}
+		return result;
+	}
+	public override getData(data: DOMStringMap): string {
+		return `
+			<table border>
+				<tr><td>名称</td><td>${data["name"]}</td></tr>
+				<tr><td>経路</td><td><details><summary>クリックで展開/収納</summary>${data["path"]}</details></td></tr>
+			</table>
+		`;
+	}
+	public override getName(): string {
+		return "鉄道";
+	}
+}

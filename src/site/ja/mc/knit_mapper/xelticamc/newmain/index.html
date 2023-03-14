@@ -70,8 +70,8 @@
 	<script type="module">
 		import { _Knit_ } from "/site/js/knit_base.js";
 		import { KnitMapper } from "/site/ja/mc/knit_mapper/knit_mapper.js";
-		import { KnitMapperData, KnitMapperCitiesLayer, KnitMapperRoadsLayer, KnitMapperBuildingsLayer } from "/site/ja/mc/knit_mapper/knit_mapper_data.js";
-		import { cities, roads, buildings } from "./data.js";
+		import { KnitMapperData, KnitMapperCitiesLayer, KnitMapperRoadsLayer, KnitMapperBuildingsLayer, KnitMapperRailwaysLayer } from "/site/ja/mc/knit_mapper/knit_mapper_data.js";
+		import { cities, roads, buildings, railways } from "./data.js";
 		const citiesLayer = new KnitMapperCitiesLayer();
 		citiesLayer.addAll(cities);
 		KnitMapperData.registerLayer("cities", citiesLayer);
@@ -81,6 +81,9 @@
 		const buildingsLayer = new KnitMapperBuildingsLayer();
 		buildingsLayer.addAll(buildings);
 		KnitMapperData.registerLayer("buildings", buildingsLayer);
+		const railwaysLayer = new KnitMapperRailwaysLayer();
+		railwaysLayer.addAll(railways);
+		KnitMapperData.registerLayer("railway", railwaysLayer);
 		KnitMapper.init();
 	</script>
 </body>

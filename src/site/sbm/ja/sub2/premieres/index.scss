@@ -1,0 +1,128 @@
+form {
+	text-align: center;
+}
+
+input,
+select {
+	background-color: rgb(30, 30, 30);
+	color: white;
+	accent-color: lime;
+}
+
+input[type="datetime-local"],
+input[type="submit"],
+input[type="reset"] {
+	background-color: #210210;
+	border: solid 1px gray;
+}
+
+input[type="submit"],
+input[type="reset"] {
+	font-size: 125%;
+	cursor: pointer;
+}
+
+table {
+	text-align: center;
+	margin: auto;
+	border-collapse: collapse;
+}
+
+#data_status {
+	text-align: center;
+	font-size: 75%;
+}
+
+#data_status div {
+	padding: 0.3ex;
+}
+
+td {
+	border: solid 1px white;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+td div {
+	margin: 0 !important;
+	padding: 0 !important;
+	white-space: nowrap;
+}
+
+.date_div {
+	width: 2.5vw;
+}
+
+.right_none {
+	border-right: none;
+}
+
+.left_none {
+	border-left: none;
+}
+
+.channel_div {
+	width: 10vw;
+}
+
+.type_div {
+	width: 5vw;
+}
+
+.url_div {
+	width: 10vw;
+}
+
+.small_space {
+	height: 0.5em;
+}
+
+.space {
+	height: 1.5em;
+}
+
+.bold {
+	font-style: italic;
+	font-weight: bold;
+}
+
+.imitation {
+	color: limegreen;
+}
+
+.decoding {
+	color: cyan;
+}
+
+.joke {
+	color: tomato;
+}
+
+.other {
+	color: yellow;
+}
+
+.link {
+	font-size: 75%;
+}
+
+.title_div {
+	width: 25vw;
+}
+
+.shorten {
+	transform-origin: 0px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.shorten:hover {
+	transform: scale(1) !important;
+	position: relative;
+	z-index: 210;
+	font-weight: bold;
+}
+
+.shorten:hover * {
+	background-color: rgba(30, 30, 30, 128);
+}

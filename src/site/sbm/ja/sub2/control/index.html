@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="jp">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-204669901-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-204669901-1');
+	</script>
+	<script>
+		(async function () {
+			let pass = prompt("password?");
+			const encoder = new TextEncoder();
+			const hashed = new Uint32Array(await crypto.subtle.digest("SHA-256", encoder.encode(pass)));
+			const right = new Uint32Array([3621608363, 3210156429, 2289324807, 1801309744, 2542852161, 3663470120, 497687151, 378487510]);
+			for (let i = 0; i < 8; i++) {
+				if (hashed[i] != right[i]) {
+					location.href = "error.html";
+				}
+			}
+		})();
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="author" content="Knit sbm.">
+	<meta name="description" content="Knit prg.">
+	<meta name="robots" content="noindex">
+	<link rel="stylesheet" type="text/css" href="../../../../css/knit_base.css">
+	<style>
+		.database {
+			font-size: 50%;
+		}
+	</style>
+	<title>Control of Submission information - Knit sbm.</title>
+	<!--見たな？-->
+</head>
+
+<body>
+	<noscript>-Knit-sbm_sub2.</noscript>
+	<header id="_knit_header"></header>
+	<div id="_knit_content_wrapper">
+		<div id="_knit_path"><a href="./">Control of Submission information</a></div>
+		<div>Copied text</div>
+		<textarea cols="100" rows="5" id="dummy_textarea" readonly placeholder="Copied text"></textarea>
+		<div>The number of items:<span id="number_display">0</span></div>
+		<div><button id="add_button">Add</button></div>
+		<table border>
+				<tbody><tr><td>Input</td><td>Output</td><td>Functions</td></tr></tbody>
+				<tbody id="main_table"></tbody>
+			</table>
+	</div>
+	<footer id="_knit_footer"></footer>
+	<noscript>Last update: August 11th,2021 by Knit sbm.</noscript>
+	<script type="module">
+		import { _Knit_ } from "/site/js/knit_base.js";
+		_Knit_.showHeader("-", "-", "sbm_sub2", "en");
+		_Knit_.showFooter(2021, 2021, 8, 11, "sbm", "en");
+	</script>
+	<script>
+		import { add } from "./js/control.js";
+		onload = function () {
+			document.getElementById("add_button").onclick = function () {
+				add();
+			}
+			add();
+		}
+	</script>
+</body>
+
+</html>

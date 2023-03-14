@@ -6,6 +6,8 @@
  */
 export class _Knit_ {
 
+	public static readonly TIME_REGULATION = ((-540) - (new Date().getTimezoneOffset())) * 60 * 1000;
+
 	/**
 	 * 要望ページを展開
 	 * 
@@ -51,6 +53,19 @@ export class _Knit_ {
 			}
 			request.send();
 		});
+	}
+
+	public static get(url, type, events) {
+		let request = null;
+		request = new XMLHttpRequest();
+		request.open("GET", url);
+		request.responseType = type;
+		try { request.addEventListener("load", events.on_load); } catch (e) { }
+		request.send();
+	}
+
+	public static getRegulatedTime(time) {
+		return new Date((new Date(time)) - _Knit_.TIME_REGULATION);
 	}
 
 	/**

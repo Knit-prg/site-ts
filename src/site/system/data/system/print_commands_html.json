@@ -1,0 +1,12 @@
+{
+	"version":"1.0.0"
+	,"$nel":"(built-in command to start a new line)"
+	,"$clr":"(built-in command to reset the style)"
+	,"$bld":"<span style='font-weight:bold'>"
+	,"$red":"<span style='color:red'>"
+	,"$cyn":"<span style='color:cyan'>"
+	,"$yel":"<span style='color:yellow'>"
+	,"$blk":"<span style='color:black'>"
+	,"$ppr":"<span style='color:purple'>"
+	,"$whe":"<span style='color:white'>"
+}

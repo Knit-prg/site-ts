@@ -1,0 +1,102 @@
+/*@media screen and (max-width:480px) {
+	#whole {
+		flex-direction:column;
+	}
+}*/
+
+body {
+	overflow: hidden;
+}
+
+#whole {
+	position: absolute;
+	display: flex;
+	top: 0px;
+	left: 0px;
+	height: 100vh;
+	width: 100vw;
+}
+
+#menu {
+	width: 30%;
+	outline: black solid 1px;
+	overflow: scroll;
+}
+
+#map {
+	width: 70%;
+	background-color: rgb(20, 20, 20);
+	outline: black solid 1px;
+	touch-action: none;
+}
+
+#menu_button {
+	white-space: nowrap;
+	user-select: none;
+	cursor: pointer;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+#credit {
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	background-color: rgba(255, 255, 255, 0.5);
+	color: black;
+	text-align: right;
+}
+
+#buttom_mover,
+#button_zoomer {
+	touch-action: none;
+}
+
+svg {
+	.cities {
+		pointer-events: all;
+	}
+
+	.cities_text {
+		font-size: 50px;
+		paint-order: stroke fill;
+		user-select: none;
+		pointer-events: none;
+		font-weight: bold;
+	}
+
+	.cities_textpath_text {
+		font-size: 12.5px;
+		paint-order: stroke fill;
+		user-select: none;
+		pointer-events: none;
+		font-weight: bold;
+	}
+
+	.railway {
+		pointer-events: stroke;
+	}
+
+	.railway_textpath_text {
+		font-size: 12.5px;
+		paint-order: stroke fill;
+		user-select: none;
+		pointer-events: none;
+		font-weight: bold;
+	}
+
+	.buildings {
+		paint-order: fill stroke;
+		pointer-events: all;
+	}
+
+	.buildings_text {
+		font-size: 25px;
+		paint-order: stroke fill;
+		user-select: none;
+		pointer-events: none;
+		font-weight: bold;
+	}
+}

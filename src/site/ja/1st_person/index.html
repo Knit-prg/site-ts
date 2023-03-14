@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-204669901-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-204669901-1');
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="author" content="Knit prg.">
+	<meta name="description" content="Knit prg.">
+	<meta name="keywords" content="Knit prg.">
+	<meta name="twitter:site" content="@knit_prg">
+	<link rel="stylesheet" type="text/css" href="/site/css/knit_base.css">
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<link rel="icon" type="image/png" href="/site/img/icon/prg.png">
+	<title>一人称ルーレット - Knit prg.</title>
+</head>
+
+<body>
+	<noscript>Please enable JavaScript... please...</noscript>
+	<header id="_knit_header"></header>
+	<div id="_knit_content_wrapper">
+		<div id="_knit_path"></div>
+		<div class="center">
+			<div id="first_person">
+				<div id="text1"> </div>
+				<div id="text2"> </div>
+				<div id="text3"> </div>
+				<div id="text4"> </div>
+			</div>
+			<div id="start_parent">
+				<span id="start" class="disabled_button">ルーレットスタート</span>
+			</div>
+			<div id="tweet_parent">
+				<a id="tweet" class="disabled_button" target="_blank">ツイートする</a>
+			</div>
+			<div id="description">
+				<div>細かいルールは決め手ないので、好きに使って下さい。</div>
+				<div>法には触れないでね</div>
+				<div>"/"はどちらかをしようすることを意味します。例えば「おいら/オイラ」は「おいら」もしくは「オイラ」</div>
+				<div>括弧内は読みを意味します。例えば「僕(ぼく/ボク)」は「僕」の読みが「ぼく」であることと、「僕」か「ぼく」か「ボク」を使用できることを意味します</div>
+				<div>ワイは責任とらんで</div>
+			</div>
+			<details>
+				<summary>搭載している一人称一覧(クリックで展開/格納)</summary>
+				<ol id="first_person_list"></ol>
+			</details>
+		</div>
+	</div>
+	<footer id="_knit_footer"></footer>
+	<script type="module">
+		import { _Knit_ } from "/site/js/knit_base.js";
+		import { FirstPersonRoulette } from "./index.js";
+		_Knit_.showHeader("", " ", "prg", "ja");
+		_Knit_.showFooter(2021, 2023, 2, 19, "prg", "ja");
+		_Knit_.showPath([["/site/", "Top"], ["/site/ja/", "日本語トップ"], ["/site/ja/1st_person", "一人称ルーレット"]]);
+		addEventListener("load", FirstPersonRoulette.onload);
+	</script>
+</body>
+
+</html>

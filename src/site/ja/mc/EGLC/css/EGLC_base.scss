@@ -1,0 +1,74 @@
+#EGLC_site_wrapper {
+	background-color: white;
+	color: black;
+	font-family: "Noto Serif JP", serif;
+	border: 1px solid black;
+	padding: 0 !important;
+
+	#name {
+		background-color: black;
+		text-align: center;
+		color: white;
+		font-size: 2em;
+		margin-top: 0 !important;
+
+		img {
+			height: 3em;
+		}
+
+		div {
+			margin: 0;
+			padding: 0 !important;
+		}
+	}
+
+	#URL {
+		font-family: "Roboto Mono", monospace;
+		margin: 0;
+		background-color: darkslategray;
+		color: lime;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 2em;
+	}
+
+	li {
+		background: none;
+	}
+
+	table {
+		border-spacing: 0;
+	}
+
+	td,
+	th {
+		border-bottom: 1px solid black;
+		padding-top: 0.5ex;
+		padding-bottom: 0.5ex;
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+
+	tr:first-child td {
+		border-top: 1px solid black;
+	}
+
+	a {
+		background: none;
+		color: blue;
+
+		&:active {
+			color: red;
+		}
+
+		&:visited {
+			color: purple;
+		}
+	}
+}
+
+#EGLC_site_content_wrapper {
+	padding: 1ex;
+}

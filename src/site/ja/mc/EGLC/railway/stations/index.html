@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-204669901-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-204669901-1');
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="author" content="Knit prg.">
+	<meta name="description" content="Knit prg.">
+	<meta name="keywords" content="Knit prg.">
+	<meta name="twitter:site" content="@knit_prg">
+	<link rel="stylesheet" type="text/css" href="/site/css/knit_base.css">
+	<link rel="stylesheet" type="text/css" href="/site/ja/mc/EGLC/css/EGLC_base.css">
+	<link rel="stylesheet" type="text/css" href="/site/ja/mc/EGLC/railway/stations/station_banner.css">
+	<link rel="icon" type="image/png" href="/site/img/EGL/EGLC.png">
+	<title>読込中 - 大書見台帝国連邦鉄道 - Knit prg.</title>
+</head>
+
+<body>
+	<noscript>Please enable JavaScript... please...</noscript>
+	<header id="_knit_header"></header>
+	<div id="_knit_content_wrapper">
+		<div id="_knit_path"></div>
+		<div class="bold">※このページは<a href="https://craft.xeltica.work">XelticaMC</a>非公式です！</div>
+		<div class="bold">※「大書見台帝国連邦鉄道」はXelticaMC内の架空の組織です。実在する組織及び実在した組織とは一切関係ありません。</div>
+		<div id="EGLC_site_wrapper">
+			<div id="URL">xelmc://railway.eglc.gov.eglc/stations/</div>
+			<div id="name">
+				<img src="/site/img/EGL/EGLC.png" alt="大書見台帝国連邦紋章">
+				<div>大書見臺帝&#xe0101;國<span class="bold gold">連&#xe0100;</span>邦&#xe0102;<span class="bold gold">鐵</span>道󠄁&#xe0101;</div>
+				<div>The <span class="bold gold">E</span>mpires of the Greatest Lecterns Confederation <span class="bold gold">N</span>ational <span class="bold gold">R</span>ailway</div>
+			</div>
+			<div id="EGLC_site_content_wrapper">
+				<div class="center" id="station_banner">
+					<div id="line1">
+						<div id="current_name"></div>
+					</div>
+					<div id="line2">
+						<div id="before_id"></div>
+						<div id="current_name_kana"></div>
+						<div id="next_id"></div>
+					</div>
+					<div id="line3">
+						<div id="before_name"></div>
+						<div id="current_id"></div>
+						<div id="next_name"></div>
+					</div>
+					<div id="line4">
+						<div id="before_en"></div>
+						<div id="current_en"></div>
+						<div id="next_en"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<footer id="_knit_footer"></footer>
+	<script type="module">
+		import { _Knit_ } from "/site/js/knit_base.js";
+		import { Stations } from "./stations.js";
+		_Knit_.showHeader("", " ", "prg", "ja");
+		_Knit_.showFooter(2021, 2023, 3, 12, "prg", "ja");
+		const lineNumber = parseInt(_Knit_.getPageOption("line"));
+		const stationNumber = parseInt(_Knit_.getPageOption("station"));
+		let station = Stations.data.getStation(lineNumber, stationNumber);
+		if (station == Stations.data.EMPTY_STATION) {
+			station = Stations.data.getGlitchedStation();
+		}
+		_Knit_.showPath([["/site/", "Top"], ["/site/ja/", "日本語トップ"], ["/site/ja/mc/", "参加しているマイクラサーバー"], ["/site/ja/mc/EGLC/", "大書見台帝国連邦"], ["/site/ja/mc/EGLC/railway/", "大書見台帝国連邦鉄道"], ["/site/ja/mc/EGLC/railway/stations/", station.name + "駅"]]);
+		Stations.setBanner(lineNumber, stationNumber);
+	</script>
+</body>
+
+</html>

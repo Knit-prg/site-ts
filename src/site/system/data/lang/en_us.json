@@ -1,0 +1,17 @@
+{
+	"version":"1.0.0"
+	,"error_undefined_command":"Undefined command"
+	,"command_version_name":"Name of the system"
+	,"command_version_version":"Version"
+	,"command_version_author":"Author"
+	,"command_version_birthday":"Birthday"
+	,"command_version_updated":"Latest updated"
+	,"command_version_error":"Error(system.commands.version)"
+	,"command_lang_now_lang":"Language"
+	,"command_lang_en_us":"English(US)"
+	,"command_lang_ja_jp":"Japanese"
+	,"command_lang_error":"Error(system.commands.lang)"
+	,"command_lang_loading":"Loading language file"
+	,"command_lang_loaded":"Loaded language file"
+	,"command_lang_undefined":"Undefined language code"
+}

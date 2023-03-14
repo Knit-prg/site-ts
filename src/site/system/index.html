@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-204669901-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'UA-204669901-1');
+	</script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta name="author" content="Knit (prg.)">
+	<meta name="description" content="Knits system">
+	<meta name="keywords" content="Knits system">
+	<meta name="twitter:site" content="@knit_prg">
+	<meta name="robots" content="noindex">
+	<link rel="stylesheet" type="text/css" href="../css/knit_base.css">
+	<link rel="stylesheet" type="text/css" href="terminal.css">
+	<link rel="icon" type="image/png" href="../img/icon/prg.png">
+	<title>Knits system</title>
+</head>
+
+<body>
+	<noscript>Knits system</noscript>
+	<header id="_knit_header"></header>
+	<div id="_knit_content_wrapper">
+		<div id="output"></div>
+		<div id="input_wrapper">
+			<div id="user" class="bold">USER_INPUT</div>
+			<div>></div>
+			<div id="textarea_wrapper"><input id="input" type="text"></div>
+		</div>
+	</div>
+	<footer id="_knit_footer"></footer>
+	<noscript>Last update: August 11th,2021 by Knit prg.</noscript>
+	<script type="module">
+		import { _Knit_ } from "/site/js/knit_base.js";
+		import { knitSystem } from "./system.js";
+		_Knit_.showHeader("", "s ", "system", "ja");
+		_Knit_.showFooter(2021, 2021, 8, 11, "prg", "ja");
+		knitSystem.init();
+			//setTimeout(function(){_knit.system.run("DEBUG","help:help;");},1000);
+	</script>
+</body>
+
+</html>
